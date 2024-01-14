@@ -12,5 +12,8 @@
     "rajeev"
   ],
   "author": "Rajeev Yadav",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "prettier": "^3.2.2"
+  }
 }
