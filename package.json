@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
   },
   "keywords": [
     "backend",
@@ -14,6 +14,9 @@
   "author": "Rajeev Yadav",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.4",
     "prettier": "^3.2.2"
   }
 }
