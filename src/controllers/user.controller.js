@@ -7,7 +7,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler(async (req, res) => {
   //get user details from user
   const { fullName, email, password, username } = req.body;
-  console.log("email: ", email);
+  // console.log("email: ", email);
 
   //validation: like if the fields are empty,isEmail
   if (
@@ -17,16 +17,23 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //if the user already exist: checked using email or username
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
   if (existedUser) {
     throw new ApiError("409", "User with email and username already exist");
   }
+
+  // console.log(req.files)
   //check for images or avtar
-  const avatarLocalPath = req.files?.avatar?.path;
-  const CoverImageLocalPath = req.files?.coverImage?.path;
+  const avatarLocalPath = req.files?.avatar[0]?.path;
+  // console.log(avatarLocalPath)
+  // const CoverImageLocalPath = req.files?.coverImage[0]?.path;
+  let CoverImageLocalPath;
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
+    CoverImageLocalPath = req.files.coverImage[0].path
+  }
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar File is Required");
@@ -52,7 +59,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // remove password and refresh token field from the response
   //check for user creation
-  const createdUser = User.findById(user._id).select("-password -refreshToken");
+  const createdUser = await User.findById(user._id).select("-password -refreshToken");
 
   //return res
   return res.status(201).json(
